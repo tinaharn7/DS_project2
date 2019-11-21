@@ -13,6 +13,7 @@ char floors[MAX][MAX];
 int dist[MAX][MAX];
 int parent[MAX][MAX];
 
+// Queue implement
 class Queue
 {
 private:
@@ -22,9 +23,9 @@ private:
     int *queue;
 
 public:
-    Queue(int m, int n)
+    Queue(int n)
     {
-        capacity = m * n;
+        capacity = n;
         front = -1;
         rear = -1;
         queue = new int[capacity];
@@ -66,22 +67,23 @@ bool Queue::isEmpty()
 }
 int Queue::getFront()
 {
-    return queue[front+1];
+    return queue[front + 1];
 }
 
 void BFS(int start_x, int start_y, int m, int n)
 {
     for (int i = 0; i < m; i++)
+    {
         for (int j = 0; j < n; j++)
         {
             dist[i][j] = INFINITY;
             parent[i][j] = -1;
         }
-
-    Queue *queue = new Queue(m, n);
+    }
+    Queue *queue = new Queue(m * n);
 
     dist[start_x][start_y] = 0;
-    parent[start_x][start_y] = 0;
+    parent[start_x][start_y] = -1;
 
     int s = start_x * 1000 + start_y;
     queue->push(s);
@@ -91,7 +93,6 @@ void BFS(int start_x, int start_y, int m, int n)
         int top = queue->getFront();
         int rol = top / 1000;
         int col = top % 1000;
-     
 
         queue->pop();
 
@@ -124,17 +125,81 @@ void BFS(int start_x, int start_y, int m, int n)
             queue->push(up);
         }
     }
-    // for (int i = 0; i < m; i++)
-    // {
-    //     for (int j = 0; j < n; j++)
-    //     {
-    //         cout << parent[i][j]<<" ";
-    //     }
-    //     cout<<'\n';
-    // }
 }
+void path(long battery, int m, int n, int start_x, int start_y)
+{
 
+    int max = 0;
 
+    for (int i = 0; i < m; i++)
+    {
+        for (int j = 0; j < n; j++)
+        {
+            if (dist[i][j] > max && dist[i][j] != INFINITY)
+            {
+                max = dist[i][j];
+            }
+        }
+    }
+    int count = 0;
+    for (int k = 1; k <= max; k++)
+    {
+        count += k * (k + 1);
+    }
+
+    output << count << '\n';
+    for (int k = 1; k <= max; k++)
+    {
+        for (int i = 0; i < m; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (dist[i][j] == k)
+                {
+                    int tempArr[max * 2];
+                    int inverseArr[max * 2];
+                    int index = 0;
+                    int tmp_x = i;
+                    int tmp_y = j;
+                    while (parent[tmp_x][tmp_y] != -1)
+                    {
+                        inverseArr[index] = tmp_y;
+                        inverseArr[index + 1] = tmp_x;
+                        tempArr[index] = tmp_x;
+                        tempArr[index + 1] = tmp_y;
+
+                        int tmp = parent[tmp_x][tmp_y];
+
+                        tmp_x = tmp / 1000;
+                        tmp_y = tmp % 1000;
+                        index += 2;
+                    }
+                    
+
+                    for (int l = index - 1; l >= 2; l--)
+                    {
+                        output << inverseArr[l] << " ";
+                        if (l % 2 == 0)
+                        {
+                            output << '\n';
+                        }
+                    }
+                    for (int l = 0; l < index; l++)
+                    {
+                        output << tempArr[l] << " ";
+                        if (l % 2 == 1)
+                        {
+                            output << '\n';
+                        }
+                    }
+
+                    output << start_x << " " << start_y << " ";
+                    output << '\n';
+                }
+            }
+        }
+    }
+}
 
 int main()
 {
@@ -152,24 +217,16 @@ int main()
         {
             test >> floor;
             floors[i][j] = floor;
-            if(floor == 'R'){
+            if (floor == 'R')
+            {
                 start_x = i;
                 start_y = j;
             }
         }
     }
     BFS(start_x, start_y, m, n);
-    // for (int i = 0; i < m; i++)
-    // {
-    //     for (int j = 0; j < n; j++)
-    //     {
-    //         cout << dist[i][j]<<" ";
-    //     }
-    //     cout<<'\n';
-    // }
+    path(battery, m, n, start_x, start_y);
 
-
-    
 
     return 0;
 }
