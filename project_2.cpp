@@ -130,6 +130,7 @@ void path(long battery, int m, int n, int start_x, int start_y)
 {
 
     int max = 0;
+    int temp = battery;
 
     for (int i = 0; i < m; i++)
     {
@@ -163,6 +164,7 @@ void path(long battery, int m, int n, int start_x, int start_y)
         {
             for (int j = 0; j < n; j++)
             {
+                battery = temp;
                 if (dist[i][j] == k)
                 {
                     output << start_x << " " << start_y << " ";
@@ -192,6 +194,7 @@ void path(long battery, int m, int n, int start_x, int start_y)
                         if (l % 2 == 0)
                         {
                             output << '\n';
+                            battery--;
                         }
                     }
                     for (int l = 0; l < index; l++)
@@ -200,11 +203,13 @@ void path(long battery, int m, int n, int start_x, int start_y)
                         if (l % 2 == 1)
                         {
                             output << '\n';
+                            battery--;
                         }
                     }
 
                     output << start_x << " " << start_y << " ";
                     output << '\n';
+                    battery--;
                 }
             }
         }
