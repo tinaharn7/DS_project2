@@ -165,6 +165,8 @@ void path(long battery, int m, int n, int start_x, int start_y)
             {
                 if (dist[i][j] == k)
                 {
+                    output << start_x << " " << start_y << " ";
+                    output << '\n';
                     int tempArr[max * 2];
                     int inverseArr[max * 2];
                     int index = 0;
