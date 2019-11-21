@@ -144,7 +144,16 @@ void path(long battery, int m, int n, int start_x, int start_y)
     int count = 0;
     for (int k = 1; k <= max; k++)
     {
-        count += k * (k + 1);
+        for (int i = 0; i < m; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
+                if (dist[i][j] == k)
+                {
+                    count += k * 2;
+                }
+            }
+        }
     }
 
     output << count << '\n';
@@ -174,7 +183,6 @@ void path(long battery, int m, int n, int start_x, int start_y)
                         tmp_y = tmp % 1000;
                         index += 2;
                     }
-                    
 
                     for (int l = index - 1; l >= 2; l--)
                     {
@@ -226,7 +234,6 @@ int main()
     }
     BFS(start_x, start_y, m, n);
     path(battery, m, n, start_x, start_y);
-
 
     return 0;
 }
